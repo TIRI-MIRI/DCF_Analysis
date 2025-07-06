@@ -54,21 +54,12 @@ The following key steps were performed:
 
 ---
 
-## 🔍 Sensitivity Analysis
 
-A sensitivity table was built by varying:  
-- WACC from 7% to 10%  
-- Terminal growth rate from 1% to 4%  
-
-This allows us to visualize how intrinsic value fluctuates based on these assumptions.
-
----
 
 ## 📁 Project Files
 
 - `dcf_model.py` – Full Python code for DCF analysis  
-- `infosys_data.csv` – Historical financial data  
-- `sensitivity_table.csv` – Output table for sensitivity analysis  
+- `infosys_data.csv` – Historical financial data   
 - `dcf_documentation.tex` – LaTeX version of the report  
 
 ---

@@ -1,0 +1,156 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+
+url = "https://drive.google.com/uc?export=download&id=1ZSxRMGn8aFM9j3D5Sf-4sVwSd6UpRcCL"
+df = pd.read_csv(url)
+df=pd.DataFrame(df)
+df
+
+g=2
+years=5
+ebit_margin=22.2
+tax_rate=26.5
+WACC=8
+
+##growth rate-cagr
+## for short term use 10 to 14 percent
+## for long therm use 2 to4 %
+## can also take the cagr from the dataset
+
+
+
+#ASSUMPTIONS:
+#Growth Rate (FY26–FY30) is 14% per year
+#EBIT Margin	is 22.2%
+#Tax Rate	is 26.5%
+##D&A as % of Revenue is	3%
+#CapEx as % of Revenue is 1.7%
+#Change in NWC as % of Revenue IS 3%
+
+## Revenue_t​=Revenue_t−1×(1+Growth Rate)
+##i have taken growth rate to be 7.6%
+revenue=[]
+years=5
+rev_prev=df["Revenue (₹ cr)"][4]
+print(rev_prev)
+i=0
+for i in range(years):
+
+  rev_new = rev_prev * (1 + g/100)
+  revenue.append(rev_new)
+  rev_prev = rev_new
+
+revenue=pd.Series(revenue)
+revenue
+
+plt.figure(figsize=(8, 5))
+plt.plot(range(1, years + 1), revenue, marker='o')
+plt.title("Revenue Forecast (Next 5 Years)")
+plt.xlabel("Year")
+plt.ylabel("Revenue (₹ Cr)")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+#EBIT FORECAST
+#EBIT= Revenue*EBIT_margin
+
+#EBIT=Revenue×Ebit_Margin%
+#NOPAT=EBIT×(1-tax_rate%)
+#D&A=Revenue×27.4%
+#CapEx=Revenue×1.7%
+#ΔNWC=Revenue×3%
+#FCF=NOPAT+D&A-CapEx-ΔNWC
+
+#EBIT:
+
+EBIT=revenue*(ebit_margin/100)
+EBIT=pd.Series(EBIT)
+EBIT
+
+#NOPAT=EBIT*(1-tax_rate/100)
+
+NOPAT=EBIT*(1-tax_rate/100)
+NOPAT
+
+#D&A=Revenue*(3/100)
+DnA=revenue*3/100
+DnA
+
+#CapEx=Revenue*17/100
+CapEx=revenue*1.7/100
+CapEx
+
+#ΔNWC=Revenue*1/100
+change_NWC=revenue*3/100
+change_NWC
+
+#FCF=NOPAT+D&A-CapEx-ΔNWC
+FCF=NOPAT+DnA-change_NWC-CapEx
+FCF
+
+# now,i will discount these fcfs using WACC(Weighted average cost of capital)(i will take it as 11.51 % as it is what i got from google)
+# now ill calculate terminal value, enterprise value then adjust them for net debt  and get intrinsic value per share
+
+# discounted fcf_t=fcf_t*discount_factor where discount_factor=(1/(1+wacc))^t
+
+disc_FCF=[]
+for i in range(years):
+  disc_FCF.append(FCF[i]/(1+WACC/100)**(i+1))
+
+disc_FCF=pd.Series(disc_FCF)
+disc_FCF
+
+plt.figure(figsize=(8, 5))
+plt.plot(range(1, years + 1), FCF, label='FCF', marker='o')
+plt.plot(range(1, years + 1), disc_FCF, label='Discounted FCF', marker='s')
+plt.title("Free Cash Flow vs Discounted FCF")
+plt.xlabel("Year")
+plt.ylabel("₹ Cr")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+
+data_pred=pd.DataFrame(
+    {"revenue":revenue,
+     "EBIT":EBIT,
+     "NOPAT":NOPAT,
+     "D&A":DnA,
+     "CapEx":CapEx,
+     "ΔNWC":change_NWC,
+     "FCF":FCF,
+     "disc_FCF":disc_FCF
+     }
+    )
+data_pred
+
+# Terminal_val=FCF_end*(1+g)/(WACC-G)
+terminal_val=FCF[years-1]*(1+g/100)/(WACC/100-g/100)
+discounted_terminal_val=terminal_val*(1/(1+WACC/100)**years)
+discounted_terminal_val
+
+#Enterprise value is the sum of all discounted cash flows and the discounted terminal value
+sum=0.0
+for _ in range(years):
+  sum+=disc_FCF[_]
+enterprise_val=sum+discounted_terminal_val
+enterprise_val
+
+# to get the equity value,subtract the debt from enterprise value
+net_debt=0
+equity_val=enterprise_val-net_debt
+equity_val
+
+#now to find intrinsic value of the shares , divide total equity by the total number of outstanding shares
+outstanding_shares=4231578947
+intrinsic_val=equity_val*1e7/outstanding_shares
+intrinsic_val
+
+#If DCF Intrinsic Value>Market Price→The stock is undervalued
+
+#If DCF Intrinsic Value<Market Price→The stock is overvalued

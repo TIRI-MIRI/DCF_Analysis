@@ -1,44 +1,41 @@
-# DCF Valuation Model – Infosys Ltd
+# DCF Valuation Model
 
-This project performs a Discounted Cash Flow (DCF) valuation of Infosys Limited using historical financial data and forecast assumptions.
+This project implements a Discounted Cash Flow (DCF) valuation model to estimate the intrinsic value of any publicly listed company using historical financial data and customizable forecast assumptions.
 
 ## Overview
 
-The DCF model estimates the intrinsic value of Infosys by:
-
-- Using historical financial data (FY21–FY25) including revenue, EBIT, net income, depreciation, CapEx, net working capital changes, and net debt.
-- Forecasting future financials (FY26–FY30) based on growth, margins, tax rate, and capital expenditure assumptions.
-- Calculating Free Cash Flows (FCF) from forecasted figures.
-- Discounting FCFs to present value using a Weighted Average Cost of Capital (WACC) of 8%.
-- Computing terminal value and adding it to the enterprise value.
-- Adjusting for net debt to find equity value.
-- Determining intrinsic value per share based on outstanding shares.
+- Uses historical financial data such as revenue, EBIT, net income, depreciation, capital expenditure, net working capital changes, and net debt.
+- Forecasts future financial performance (typically 5 years) based on user-defined assumptions.
+- Calculates Free Cash Flows (FCF) for each forecast year.
+- Discounts FCFs to present value using a specified Weighted Average Cost of Capital (WACC).
+- Computes terminal value at the end of the forecast period and discounts it.
+- Adds discounted FCFs and terminal value to compute Enterprise Value.
+- Adjusts for net debt to estimate Equity Value.
+- Divides Equity Value by the number of outstanding shares to calculate the intrinsic value per share.
 
 ## Final Valuation Summary
 
-| Metric                    | Value (₹ Cr)        |
-|---------------------------|---------------------|
-| Discounted Terminal Value | 304,334             |
-| Enterprise Value          | 405,012             |
-| Equity Value              | 405,012 (net debt = 0) |
-| Intrinsic Value per Share | ₹957.12             |
+- Discounted Terminal Value  
+- Enterprise Value  
+- Equity Value  
+- Intrinsic Value per Share  
 
 ## Project Files
 
-- `dcf_model.py` — Python script implementing the DCF valuation  
-- `infosys_data.csv` — Historical financial data used in the model  
-- `dcf_documentation.tex` — LaTeX report detailing the valuation process and results
+- `dcf_model.py` – Python script implementing the DCF valuation logic.
+- `financial_data.csv` – CSV file containing historical financial data.
+- `dcf_documentation.tex` – LaTeX file describing methodology and valuation results.
 
 ## How to Use
 
-1. Review and adjust assumptions in `dcf_model.py` as needed.
-2. Run the Python script to generate valuation outputs.
-3. Refer to `dcf_documentation.tex` for the full report and methodology.
-
-## Conclusion
-
-This DCF valuation provides a data-driven estimate of Infosys’s intrinsic value, useful for investment analysis and decision making.
-
----
-
-*Feel free to explore and modify the model according to your needs.*
+1. Replace `financial_data.csv` with the target company’s historical financials.
+2. Adjust assumptions in `dcf_model.py`, including:
+   - Revenue growth rates
+   - Operating margins (EBIT)
+   - Tax rate
+   - Depreciation and CapEx
+   - Net working capital assumptions
+   - Terminal growth rate
+   - WACC
+   - Number of outstanding shares
+3. Run the script:
